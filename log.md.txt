@@ -5,6 +5,4 @@
 - Learned basic GitHub Desktop workflow
 
 ## Day 2
-- Wired KY-018 photoresistor to Arduino A0
-- Uploaded test sketch
-- Verified that analog values change with light conditions
+- KY-018 Photoresistor Module test with Arduino Uno (Joy-IT R3 DIP)

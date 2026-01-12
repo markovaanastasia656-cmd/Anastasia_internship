@@ -6,3 +6,4 @@
 
 ## Day 2
 - KY-018 Photoresistor Module test with Arduino Uno (Joy-IT R3 DIP)
+- Tested KY-004 Taster Module with Arduino Uno

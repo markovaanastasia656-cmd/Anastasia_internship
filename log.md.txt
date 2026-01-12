@@ -1,0 +1,10 @@
+# Weekly Log
+
+## Day 1
+- Created GitHub repository
+- Learned basic GitHub Desktop workflow
+
+## Day 2
+- Wired KY-018 photoresistor to Arduino A0
+- Uploaded test sketch
+- Verified that analog values change with light conditions

@@ -50,3 +50,58 @@ void loop() {
 }
 
 // Expected values: ~0 (dark) to ~1023 (bright light)
+
+
+---
+
+
+## Sensor 2: KY-004 Taster Module
+
+### Basic Information
+- Sensor name: KY-004 Taster Module
+- Purpose: Detect button press (on/off state)
+- Interface: Digital output
+- Operating voltage: 3.3 V – 5 V
+- Source / Reference: [https://sensorkit.joy-it.net/en/sensors/ky-004]
+
+### How it works
+- KY-004 contains a push button with a built-in pull-down resistor
+- When the button is **not pressed** → output is LOW (0V)
+- When the button is **pressed** → output is HIGH (~5V)
+- Useful for user input, simple on/off control, or triggering events in Arduino projects
+
+---
+
+### Hardware Setup 
+
+### Software Setup (Arduino IDE)
+- Platform: Arduino Uno
+- Programming language: C / Arduino
+- Library: None required (uses built-in digitalRead())
+
+#### PIN Connection - Arduino Uno (Joy-IT R3 DIP)
+- VCC → 5V
+- GND → GND
+- Signal → Pin 10
+
+#### Arduino Sketch
+
+int button = 10; // KY-004 signal
+int value;
+
+void setup() {
+  pinMode(button, INPUT);
+  digitalWrite(button, HIGH); // internal pull-up
+  Serial.begin(9600);
+  Serial.println("KY-004 Button test");
+}
+
+void loop() {
+  value = digitalRead(button);
+  if (value == LOW) { // pressed
+    Serial.println("Button pressed");
+  } else {
+    Serial.println("Button not pressed");
+  }
+  delay(300);
+}

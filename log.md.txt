@@ -1,9 +1,14 @@
 # Weekly Log
 
-## Day 1
+## Day 1: 26/12/2025
 - Created GitHub repository
 - Learned basic GitHub Desktop workflow
 
-## Day 2
+## Day 2: 12/01/2026
 - KY-018 Photoresistor Module test with Arduino Uno (Joy-IT R3 DIP)
 - Tested KY-004 Taster Module with Arduino Uno (Joy-IT R3 DIP)
+
+## Day 3: 23/01/2026
+- KY-028 Temperature Sensor / Thermistor test with Arduino Uno (Joy-IT R3 DIP)
+- Learned analog and digital outputs
+- Observed: warmer → analog voltage ↓, digital output switches at threshold

@@ -18,8 +18,8 @@ Multiple microcontrollers can be recorded here (Arduino, Raspberry Pi, etc
 
 ### How it works
 - KY-004 contains a push button with a built-in pull-down resistor
-- When the button is **not pressed** → output is LOW (0V)
-- When the button is **pressed** → output is HIGH (~5V)
+- When the button is not pressed → output is LOW (0V)
+- When the button is pressed → output is HIGH (~5V)
 - Useful for user input, simple on/off control, or triggering events in Arduino projects
 
 ---
@@ -86,10 +86,108 @@ void loop() {
 
 
 ---
+# Sensor 2: KY-016 RGB 5mm LED Module
+
+### Basic Information
+- Sensor name: KY-016 RGB 5mm LED Module
+- Purpose: Visual color output using red, green, and blue LEDs
+- Interface: Digital output (PWM controllable)
+- Operating voltage: 3.3 V – 5 V
+- Forward current: 20 mA per LED
+- Forward voltage:  
+  - Red: ~1.8 V  
+  - Green & Blue: ~2.8 V  
+- Series resistors required per color  
+- Source / Reference: [https://sensorkit.joy-it.net/en/sensors/ky-016]
+---
+
+### How it works
+- The KY-016 module contains three individual LEDs: red, green, and blue.  
+- These LEDs share a common cathode connection.  
+- By adjusting the brightness of each LED (through PWM), many different colors can be created.  
+- Human eyes interpret rapid on/off switching (PWM) as changes in brightness.  
+- Useful for status indicators, color effects, and visual feedback in projects.
+
+---
+
+### Hardware Setup 
+
+#### PIN Connection - Arduino Uno (Joy-IT R3 DIP)
+- VCC (common cathode) → GND
+- Red LED → Digital Pin 10 (through 180ohm resistor)
+- Green LED → Digital Pin 11 (through 100ohm resistor)
+- Blue LED → Digital Pin 12 (through 100ohm resistor)
+
+---
+
+### Software Setup (Arduino IDE)
+- Platform: Arduino Uno
+- Programming language: C / Arduino
+- Library: None required (uses built-in digitalWrite and analogWrite)
+
+#### Arduino Sketch
+
+```cpp
+
+// Define output pins for the RGB LED module
+int ledRed = 10;    // Red LED connected to pin 10
+int ledGreen = 11;  // Green LED connected to pin 11
+int ledBlue = 12;   // Blue LED connected to pin 12
+
+void setup() {
+  // Initialize the LED pins as output
+  pinMode(ledRed, OUTPUT);    // Set red LED pin as output
+  pinMode(ledGreen, OUTPUT);  // Set green LED pin as output
+  pinMode(ledBlue, OUTPUT);   // Set blue LED pin as output
+
+  // Start with all LEDs off
+  digitalWrite(ledRed, LOW);   // Turn off red LED
+  digitalWrite(ledGreen, LOW); // Turn off green LED
+  digitalWrite(ledBlue, LOW);  // Turn off blue LED
+
+  // Inform that setup is complete
+  Serial.begin(9600); // Start serial output to PC
+  Serial.println("KY-016 RGB LED Test");
+}
+
+void loop() {
+  // Turn red LED on, other colors off
+  digitalWrite(ledRed, HIGH);   // Red on
+  digitalWrite(ledGreen, LOW);  // Green off
+  digitalWrite(ledBlue, LOW);   // Blue off
+  delay(3000);                  // Wait 3 seconds
+
+  // Turn green LED on
+  digitalWrite(ledRed, LOW);   
+  digitalWrite(ledGreen, HIGH); 
+  digitalWrite(ledBlue, LOW);   
+  delay(3000);                  
+
+  // Turn blue LED on
+  digitalWrite(ledRed, LOW);    
+  digitalWrite(ledGreen, LOW);  
+  digitalWrite(ledBlue, HIGH);  
+  delay(3000);                  
+
+  // Turn all colors off
+  digitalWrite(ledRed, LOW);    
+  digitalWrite(ledGreen, LOW);  
+  digitalWrite(ledBlue, LOW);   
+  delay(1000);
+}
+
+// Expected behavior:
+// - Red on for 3 seconds
+// - Green on for 3 seconds
+// - Blue on for 3 seconds
+// - Repeat loop
+// You can add PWM via analogWrite() for mixed color effects.
+
+```
+---
 
 
-
-# Sensor 2: KY-017 Tilt Switch Module
+# Sensor 3: KY-017 Tilt Switch Module
 
 ### Basic Information
 - Sensor name: KY-017 Tilt Switch Module
@@ -170,7 +268,7 @@ void loop() {
 ---
 
 
-# Sensor 3: KY-018 Photoresistor Module
+# Sensor 4: KY-018 Photoresistor Module
 
 ### Basic Information
 - Sensor name: KY-018 Photoresistor Module
@@ -227,7 +325,7 @@ void loop() {
 ---
 
 
-# Sensor 4: KY-020 Tilt Switch Module
+# Sensor 5: KY-020 Tilt Switch Module
 
 ### Basic Information
 - Sensor name: KY-020 Tilt Switch Module
@@ -309,7 +407,86 @@ void loop () {
 ---
 
 
-# Sensor 5: KY-028 Temperature Sensor Module
+# Sensor 6: KY-022 Infrared Receiver Module
+
+### Basic Information
+- Sensor name: KY-022 Infrared Receiver Module
+- Purpose: Receive and decode infrared (IR) remote control signals
+- Interface: Digital output
+- Operating voltage: 3.3 V – 5 V
+- Source / Reference: [https://sensorkit.joy-it.net/en/sensors/ky-022]
+
+---
+
+### How it works
+- The KY-022 contains an IR receiver tuned for ~38 kHz carrier signals.
+- It converts incoming IR remote light into a digital signal on its output pin.  
+- When IR light modulated at 38 kHz is received, the module’s output toggles according to the encoded signal. 
+- A small LED on the module flashes briefly to indicate reception.  
+- This digital output needs to be decoded via software/library (e.g., IRremote) to interpret the actual data.
+
+---
+
+### Hardware Setup 
+
+#### PIN Connection - Arduino Uno (Joy-IT R3 DIP)
+- VCC → 5V
+- GND → GND
+- Signal → Pin 2
+
+---
+
+### Software Setup (Arduino IDE)
+- Platform: Arduino Uno
+- Programming language: C / Arduino
+- Library: IRremote (required for decoding IR signals)
+
+---
+
+#### Arduino Sketch
+
+```cpp
+
+#include <IRremote.h>     // Include IRremote library
+
+int receiverPin = 2;      // KY-022 signal pin connected to Arduino pin 2
+IRrecv irrecv(receiverPin);  // Create IR receiver object
+decode_results results;      // Storage for decoded IR results
+
+void setup() {
+  // Initialize serial communication
+  Serial.begin(9600);            // Must match Serial Monitor baud rate
+
+  // Start the IR receiver
+  irrecv.enableIRIn();           // Enable the receiver
+
+  // Print startup message
+  Serial.println("KY-022 IR Receiver Test");
+}
+
+void loop() {
+  // Check if an IR code was received
+  if (irrecv.decode(&results)) {
+    // Print the raw value received in hexadecimal
+    Serial.print("IR code received: 0x");
+    Serial.println(results.value, HEX);
+
+    // Prepare to receive the next code
+    irrecv.resume();
+  }
+}
+
+// Expected behavior:
+// - Press a button on an IR remote
+// - A hexadecimal code (e.g., 0xFFA25D) prints in Serial Monitor
+// - Same button usually sends same code repeatedly
+```
+
+---
+
+
+
+# Sensor 7: KY-028 Temperature Sensor Module
 
 ### Basic Information
 - Sensor name: KY-028 Temperature Sensor Module (Thermistor)

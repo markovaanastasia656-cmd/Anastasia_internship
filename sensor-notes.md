@@ -89,7 +89,88 @@ void loop() {
 
 
 
-# Sensor 2: KY-018 Photoresistor Module
+# Sensor 2: KY-017 Tilt Switch Module
+
+### Basic Information
+- Sensor name: KY-017 Tilt Switch Module
+- Purpose: Detect tilt or change in orientation
+- Interface: Digital output
+- Operating voltage: 3.3 V – 5 V
+- Source / Reference: [https://sensorkit.joy-it.net/en/sensors/ky-017]
+
+---
+
+### How it works
+- The KY-017 module contains a simple tilt switch (ball/mercury switch)
+- Inside the module, a small ball closes the internal contacts when tilted
+- Depending on the orientation:
+  - Upright position → ball closes the circuit → digital output changes
+  - Tilted position → ball opens the circuit → digital output changes
+- A potentiometer allows adjustment of the sensitivity / trigger point
+- The module includes an LM393 comparator
+- Useful for tilt detection, movement alarms, or orientation sensing
+
+---
+
+### Hardware Setup 
+
+#### PIN Connection - Arduino Uno (Joy-IT R3 DIP)
+- VCC → 5V
+- GND → GND
+- Signal → Pin 10
+
+---
+
+### Software Setup (Arduino IDE)
+- Platform: Arduino Uno
+- Programming language: C / Arduino
+- Library: None required (uses built-in digitalRead())
+
+#### Arduino Sketch
+
+```cpp
+int tiltPin = 10;  // KY-017 signal pin is connected to Arduino pin 10
+
+// Variable to store the current switch state
+int tiltValue;
+
+void setup() {
+  // Set the tilt sensor pin as input
+  pinMode(tiltPin, INPUT);
+
+  // Start serial communication
+  Serial.begin(9600);  // must match Serial Monitor baud rate
+
+  // Print a startup message
+  Serial.println("KY-017 Tilt test");
+}
+
+void loop() {
+  // Read the current digital value from the tilt sensor
+  tiltValue = digitalRead(tiltPin);
+
+  // Check the sensor state
+  if (tiltValue == LOW) {
+    // Sensor is tilted (switch closed)
+    Serial.println("Tilt detected");
+  } else {
+    // Sensor is not tilted (switch open)
+    Serial.println("No tilt");
+  }
+
+  // Wait before next reading to make output readable
+  delay(300);
+}
+// Expected behavior:
+// - No tilt  -> Output = HIGH  -> "No tilt" is printed
+// - Tilt     -> Output = LOW   -> "Tilt detected" is printed
+```
+
+
+---
+
+
+# Sensor 3: KY-018 Photoresistor Module
 
 ### Basic Information
 - Sensor name: KY-018 Photoresistor Module
@@ -146,7 +227,89 @@ void loop() {
 ---
 
 
-# Sensor 3: KY-028 Temperature Sensor Module
+# Sensor 4: KY-020 Tilt Switch Module
+
+### Basic Information
+- Sensor name: KY-020 Tilt Switch Module
+- Purpose: Detect tilt or orientation changes
+- Interface: Digital output
+- Operating voltage: 3.3 V – 5 V
+- Source / Reference: [https://sensorkit.joy-it.net/en/sensors/ky-020]
+---
+
+### How it works
+-- The KY-020 module contains a simple tilt switch (ball inside)
+- When the module is tilted, the ball closes the internal contacts
+- Depending on orientation:
+  - Flat / not tilted → switch open → digital output HIGH
+  - Tilted → switch closed → digital output LOW
+- No potentiometer or comparator included
+- Useful for tilt detection, simple alarms, or orientation sensing
+
+---
+
+### Hardware Setup 
+
+#### PIN Connection - Arduino Uno (Joy-IT R3 DIP)
+- VCC → 5V
+- GND → GND
+- Signal → Pin 10
+
+---
+
+### Software Setup (Arduino IDE)
+- Platform: Arduino Uno
+- Programming language: C / Arduino
+- Library: None required (uses built-in digitalRead())
+
+#### Arduino Sketch
+
+```cpp
+
+int tilt_switch = 10;  // KY-020 signal pin
+
+// Variable to store the sensor value
+int value;
+
+void setup () {
+  // Use internal pull-up resistor
+  // This prevents the input pin from floating
+  pinMode(tilt_switch, INPUT_PULLUP);
+
+  // Initialize the serial monitor
+  Serial.begin(9600);
+
+  // Startup message
+  Serial.println("KY-020 Inclination test");
+}
+
+void loop () {
+  // Read the current signal from the sensor
+  value = digitalRead(tilt_switch);
+
+  // LOW means the switch is closed (tilted)
+  if (value == LOW) {
+    Serial.println("Tilted");
+  } else {
+    // HIGH means the switch is open (not tilted)
+    Serial.println("Not tilted");
+  }
+
+  // Delay for readable output
+  delay(300);
+}
+
+// Expected behavior:
+// - No tilt → Output = HIGH → "No tilt" printed
+// - Tilt   → Output = LOW  → "Tilt detected" printed
+
+```
+
+
+---
+
+
+# Sensor 5: KY-028 Temperature Sensor Module
 
 ### Basic Information
 - Sensor name: KY-028 Temperature Sensor Module (Thermistor)

@@ -8,7 +8,12 @@
 - KY-018 Photoresistor Module test with Arduino Uno (Joy-IT R3 DIP)
 - Tested KY-004 Taster Module with Arduino Uno (Joy-IT R3 DIP)
 
-## Day 3: 23/01/2026
+## Day 3: 23/01
 - KY-028 Temperature Sensor / Thermistor test with Arduino Uno (Joy-IT R3 DIP)
 - Learned analog and digital outputs
 - Observed: warmer → analog voltage ↓, digital output switches at threshold
+
+## Day 4: 25/01
+- Completed KY-017 and KY-020 via Joy-IT R3 DIP
+- Started on KY-016 and KY-022
+- 100 & 180 ohm resistors, and Infrared LED are still needed

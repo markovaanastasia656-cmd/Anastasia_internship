@@ -295,8 +295,8 @@ void loop () {
     Serial.println("Not tilted");
   }
 
-  // Delay for readable output
-  delay(300);
+  // 1 sec Delay for readable output
+  delay(1000);
 }
 
 // Expected behavior:

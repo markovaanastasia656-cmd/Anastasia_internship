@@ -5,9 +5,252 @@ It includes hardware setup, software code, test results, and references.
 Multiple microcontrollers can be recorded here (Arduino, Raspberry Pi, etc
 
 ---
+# Sensor 1: KY-001 Temperature Sensor (DS18B20)
+
+### Basic Information
+- Sensor name: KY-001 Temperature Sensor Module (DS18B20)
+- Purpose: Measure temperature with high precision and use in one-wire networks
+- Interface: 1-Wire digital communication
+- Operating voltage: 3.3 V – 5 V
+- Source / Reference: [https://sensorkit.joy-it.net/en/sensors/ky-001]
+
+### How it works
+- The KY-001 module uses a **DS18B20 digital temperature sensor**
+- It communicates using the **1-Wire bus protocol**
+- Only one data line plus ground and power is needed for communication
+- The sensor can operate in “parasite power” mode (drawing power from the data line) or with external supply
+- Each DS18B20 has a **unique 64-bit serial code**, allowing multiple sensors on the same bus
+- Measurement range: **-55°C to +125°C**, accuracy ±0.5°C in -10°C to +85°C range
+
+---
+
+### Hardware Setup
+
+#### PIN Connection - Arduino Uno (Joy-IT R3 DIP)
+- VCC → 5V
+- GND → GND
+- Signal → Digital Pin 4
+- *Note: A pull-up resistor (~4.7 kΩ) between Signal and VCC is required for reliable 1-Wire communication*]
+
+  <img width="252" height="238" alt="image" src="https://github.com/user-attachments/assets/9d8d80b6-f391-4890-b764-e31fa7b176f0" />
 
 
-# Sensor 1: KY-004 Taster Module
+---
+
+### Software Setup (Arduino IDE)
+- Platform: Arduino Uno
+- Programming language: C / Arduino
+- **Libraries required:**
+  - OneWire (by Paul Stoffregen) — for 1-Wire protocol
+  - DallasTemperature (by Miles Burton) — for DS18B20 temperature functions
+- Libraries can be installed via Arduino IDE Library Manager
+
+#### Arduino Sketch
+
+```cpp
+
+// Include required libraries for 1-Wire and temperature control
+#include <OneWire.h>               // 1-Wire communication
+#include <DallasTemperature.h>     // DS18B20 sensor support
+
+// digital pin connected to the DS18B20 data line
+#define KY001_Signal_PIN 4         // Connect signal to Arduino pin 4
+
+// Setup OneWire instance for communication
+OneWire oneWire(KY001_Signal_PIN);
+
+// Pass OneWire reference to DallasTemperature library
+DallasTemperature sensors(&oneWire);
+
+void setup() {
+  // Start serial communication for monitoring
+  Serial.begin(9600);              
+  Serial.println("KY-001 Temperature measurement");
+
+  // Initialize the temperature sensor
+  sensors.begin();                 
+}
+
+void loop() {
+  // Request temperature measurements from DS18B20
+  sensors.requestTemperatures();   
+
+  // Read the temperature in Celsius from the first sensor on the bus
+  float tempC = sensors.getTempCByIndex(0);
+
+  // Print the temperature value
+  Serial.print("Temperature: ");
+  Serial.print(tempC);
+  Serial.println(" °C");
+
+  // Wait 1 second before next reading
+  delay(1000);
+}
+
+// Expected behavior:
+// - Serial Monitor should print temperature in °C every second.
+// - Temperature reflects ambient conditions.
+// - Temperature range capability: -55°C to +125°C.
+```
+---
+# Sensor 2: KY-002 Vibration Switch Module
+
+### Basic Information
+- Sensor name: KY-002 Vibration Switch Module
+- Purpose: Detect shocks and vibrations
+- Interface: Digital output (switch)
+- Operating voltage: 3.3 V – 5 V
+- Source / Reference: [https://sensorkit.joy-it.net/en/sensors/ky-002]
+
+### How it works
+- The KY-002 module detects mechanical vibrations and shocks
+- It consists of an outer conductive casing and an internal spring
+- When a shock or vibration occurs, the spring makes contact with the casing
+- This closes an internal switch and generates a **digital signal** change
+- Useful for security systems (door/window vibration), machine vibration monitoring, and shock detection projects:contentReference[oaicite:1]{index=1}
+
+---
+
+### Hardware Setup 
+
+### Software Setup (Arduino IDE)
+- Platform: Arduino Uno
+- Programming language: C / Arduino
+- Library: None required (uses built-in digitalRead())
+
+#### PIN Connection - Arduino Uno (Joy-IT R3 DIP)
+- VCC → 5V
+- GND → GND
+- Signal → Pin 10
+
+  <img width="234" height="225" alt="image" src="https://github.com/user-attachments/assets/79420e7f-ff6b-402c-85bc-9a5fc5a8d8f8" />
+
+
+#### Arduino Sketch
+
+```cpp
+
+// Declare the digital pin connected to the KY-002 signal
+int vib = 10; // KY-002 signal pin connected to Arduino pin 10
+
+// Variable to store current sensor value
+int value;
+
+void setup() {
+  // Set the vibration sensor pin as input
+  pinMode(vib, INPUT);
+
+  // Enable internal pull-up resistor to avoid floating state
+  digitalWrite(vib, HIGH);
+
+  // Start serial communication with the computer
+  Serial.begin(9600);
+
+  // Print startup message
+  Serial.println("KY-002 Vibration detection");
+}
+
+void loop() {
+  // Read the current signal from the vibration sensor
+  value = digitalRead(vib);
+
+  // If a vibration is detected (switch closes),
+  // the value becomes LOW
+  if (value == LOW) {
+    // Print detection message
+    Serial.println("Vibration detected");
+
+    // Wait 100 ms to avoid rapid repeated prints
+    delay(100);
+  }
+}
+
+// Expected behavior:
+// - No vibration → Output remains HIGH (no message printed)
+// - Vibration detected → Output becomes LOW → "Vibration detected" printed
+```
+---
+
+# Sensor 6: KY-003 Hall Magnetic Field Sensor
+
+### Basic Information
+- Sensor name: KY-003 Hall Magnetic Field Sensor
+- Purpose: Detect magnetic fields (on/off)
+- Interface: Digital output (Hall effect switch)
+- Operating voltage: 5V (due to integrated LED and sensor design)
+- Source / Reference: [https://sensorkit.joy-it.net/en/sensors/ky-003]
+---
+
+### How it works
+- The KY-003 module includes a Hall-effect switch based on the **A3144 chipset**  
+- Hall-effect switches change output state when exposed to a magnetic field  
+- When a magnetic field is present near the sensor:  
+  - The internal transistor switches  
+  - The **digital output is pulled LOW**  
+  - The integrated status LED lights (active-low behavior)  
+- When no magnetic field is present:  
+  - The output stays HIGH (open collector with pull-up)  
+- Useful for detecting magnets, proximity switches, wheel rotation sensors, or as a simple digital magnetic switch.
+
+---
+
+### Hardware Setup 
+
+#### PIN Connection - Arduino Uno (Joy-IT R3 DIP)
+- VCC → 5V
+- GND → GND
+- Signal → Pin 10
+
+---
+
+### Software Setup (Arduino IDE)
+- Platform: Arduino Uno
+- Programming language: C / Arduino
+- Library: None required (uses built-in `digitalRead()`)
+
+#### Arduino Sketch
+
+```cpp
+
+// Declare the digital pin connected to the KY-003 signal
+int hallPin = 10; // Hall sensor signal connected to Arduino pin 10
+
+// Storage for sensor reading
+int hallValue;
+
+void setup() {
+  // Initialize the sensor pin as input
+  // Internal pull-up resistor ensures a stable HIGH when no magnet is present
+  pinMode(hallPin, INPUT);
+  digitalWrite(hallPin, HIGH);
+
+  // Start serial communication
+  Serial.begin(9600);  // Must match Serial Monitor baud rate
+
+  // Initial message
+  Serial.println("KY-003 Magnetic field detection");
+}
+
+void loop() {
+  // Read the digital state from the Hall sensor
+  hallValue = digitalRead(hallPin);
+
+  // When a magnetic field is near, the module output goes LOW
+  if (hallValue == LOW) {
+    Serial.println("Magnetic field detected");
+    delay(100); // Short pause
+  }
+}
+
+// Expected behavior:
+// - No magnetic field → Output = HIGH → no print
+// - Magnetic field present → Output = LOW → "Magnetic field detected"
+// - Red LED on the sensor blinks when magnetic field is deteected
+
+```
+---
+
+# Sensor 4: KY-004 Taster Module
 
 ### Basic Information
 - Sensor name: KY-004 Taster Module
@@ -82,11 +325,241 @@ void loop() {
 }
 
 ```
+---
+# Sensor 5: KY-005 Infrared Transmitter Module
 
+### Basic Information
+- Sensor name: KY-005 Infrared Transmitter Module
+- Purpose: Emit infrared light for remote control or data transmission
+- Interface: Digital output (IR LED)
+- Operating voltage: 3.3 V – 5 V
+- Source / Reference: [https://sensorkit.joy-it.net/en/sensors/ky-005]
+
+---
+
+### How it works
+- The KY-005 module contains an infrared LED that emits invisible infrared light
+- Infrared light can be used to send signals to receivers such as receiver sensors or remote controlled devices
+- The LED emits at around 940 nm wavelength, not visible to the human eye
+- To protect the LED and avoid damage, a series resistor must be used depending on input voltage
+- Useful for projects where remote control or IR communication is needed (paired with an IR receiver like KY-022)
+
+---
+
+### Hardware Setup 
+
+#### PIN Connection - Arduino Uno (Joy-IT R3 DIP)
+- VCC → 5V
+- GND → GND
+- Signal → Pin 3 (digital output for IR LED)
+
+<img width="250" height="279" alt="image" src="https://github.com/user-attachments/assets/7a484251-de23-43b5-9556-6c120c2a0f13" />
+
+
+> Notes:  
+> - A series resistor is recommended when driving the IR LED directly  
+> - For 5V operation, use a ~220 Ω resistor in series with the Signal pin before the LED
+
+---
+
+### Software Setup (Arduino IDE)
+- Platform: Arduino Uno
+- Programming language: C / Arduino
+- Library: None required for simple blink (digitalWrite)
+
+#### Arduino Sketch
+
+```cpp
+
+// Declare the digital pin connected to the KY-005 signal
+int irPin = 3; // KY-005 emitter pin connected to Arduino pin 3
+
+void setup() {
+  // Set the IR transmitter pin as OUTPUT
+  pinMode(irPin, OUTPUT);
+
+  // Start serial communication for debugging
+  Serial.begin(9600);
+
+  // Print startup message
+  Serial.println("KY-005 IR Transmitter Test");
+}
+
+void loop() {
+  // Turn the IR LED ON
+  digitalWrite(irPin, HIGH); // Start emitting IR
+  Serial.println("IR ON"); // Debug message
+  delay(500); // Keep IR on for 500 ms
+
+  // Turn the IR LED OFF
+  digitalWrite(irPin, LOW); // Stop emitting IR
+  Serial.println("IR OFF"); // Debug message
+  delay(500); // Keep IR off for 500 ms
+
+  // This blinking pattern makes the IR LED emit pulses
+  // The receiver (e.g., KY-022) will see this pattern
+}
+
+// Expected behavior:
+// - “IR ON” and “IR OFF” messages alternate every 500 ms
+// - IR LED emits pulses that can be detected by an IR receiver module
+// - When using KY-022 paired with this transmitter, reception code can detect IR signal
+```
+### Experiment: KY-005 (IR Transmitter) + KY-022 (IR Receiver)
+- Send infrared signals using KY-005
+- Receive and detect the signal using KY-022
+- Verify IR transmission using two modules on one Arduino
+
+---
+
+### Hardware Setup
+
+#### Arduino + Breadboard + Sensors
+- **KY-005 (IR Transmitter)**
+  - VCC → 5V 
+  - GND → GND 
+  - S (Signal) → Arduino Pin 3 via 220Ω resistor (resistor in series)
+
+- **KY-022 (IR Receiver)**
+  - VCC → 5V (red rail)
+  - GND → GND (blue rail)
+  - OUT → Arduino Pin 11
+
+- **220Ω resistor for KY-005 S pin**
+  - One leg → same hole as KY-005 S (e.g., A3)
+  - Other leg → Arduino Pin 3 (different column, e.g., B3)
+
+---
+
+### Software Setup (Arduino IDE)
+- Platform: Arduino Uno
+- Programming language: C / Arduino
+- Library: `IRremote` library recommended for 38kHz signal generation
+
+---
+
+### Arduino Sketch (Basic Digital Test)
+
+```cpp
+#include <IRremote.h>  // Recommended for accurate 38kHz signal
+
+int irSendPin = 3;     // KY-005 S pin through 220Ω
+int irReceivePin = 11; // KY-022 OUT pin
+
+void setup() {
+  pinMode(irSendPin, OUTPUT);   // Send IR signal
+  pinMode(irReceivePin, INPUT); // Read IR signal
+  Serial.begin(9600);
+  Serial.println("IR transmitter/receiver test start");
+}
+
+void loop() {
+  // Send a short IR pulse (for basic digital test)
+  digitalWrite(irSendPin, HIGH); // Turn IR LED ON
+  delay(10);                     // 10ms pulse
+  digitalWrite(irSendPin, LOW);  // Turn IR LED OFF
+
+  // Read receiver
+  int signal = digitalRead(irReceivePin);
+
+  // Print result
+  if (signal == HIGH) {
+    Serial.println("IR signal detected");
+  } else {
+    Serial.println("No IR signal");
+  }
+
+  delay(500); // Wait 0.5s before next pulse
+}
+```
+---
+
+
+# Sensor 6: KY-006 Passive Piezo-Buzzer Module
+
+### Basic Information
+- Sensor name: KY-006 Passive Piezo-Buzzer Module
+- Purpose: Generate simple tones or alarm sounds under program control
+- Interface: Digital output (PWM or square wave control)
+- Operating voltage: 3.3 V – 5 V
+- Source / Reference: [https://sensorkit.joy-it.net/en/sensors/ky-006]
+
+---
+
+### How it works
+- The KY-006 is a **passive piezoelectric buzzer module** that does **not** contain an internal oscillator.  
+- Instead, it requires a **PWM (Pulse Width Modulated) or square wave output** to produce sound.  
+- The frequency of the PWM signal (i.e., how fast the signal toggles) determines the tone of the buzzer.  
+- Typical usable tone range achievable is approximately **1.5 kHz to 2.5 kHz**.  
+- Works with Arduino and other microcontrollers by outputting a square wave from a digital pin.
+
+---
+
+### Hardware Setup 
+
+#### PIN Connection - Arduino Uno (Joy-IT R3 DIP)
+- VCC → 5V  
+- GND → GND  
+- Signal → Pin 8
+
+<img width="253" height="254" alt="image" src="https://github.com/user-attachments/assets/18a59434-3047-450d-bab6-30776473b657" />
 
 
 ---
-# Sensor 2: KY-016 RGB 5mm LED Module
+
+### Software Setup (Arduino IDE)
+- Platform: Arduino Uno  
+- Programming language: C / Arduino  
+- Library: None required (uses basic digitalWrite and PWM or tone())
+
+#### Arduino Sketch
+
+```cpp
+
+// Pin connected to the KY-006 buzzer signal
+int buzzer = 8;  // Set digital pin 8 as buzzer control pin
+
+void setup() {
+  // Set the buzzer pin as output
+  pinMode(buzzer, OUTPUT);  // OUTPUT mode allows us to send signals
+
+  // Print a startup message
+  Serial.begin(9600);
+  Serial.println("KY-006 Passive Buzzer Test");
+}
+
+void loop() {
+  // First tone: Approx ~1.5 kHz
+  for (int i = 0; i < 80; i++) {
+    digitalWrite(buzzer, HIGH); // Turn signal high
+    delay(1);                   // 1 ms HIGH
+    digitalWrite(buzzer, LOW);  // Turn signal low
+    delay(1);                   // 1 ms LOW
+  }
+
+  // Pause between tones
+  delay(1000);  // 1 second pause
+
+  // Second tone: Approx ~1 kHz
+  for (int i = 0; i < 100; i++) {
+    digitalWrite(buzzer, HIGH); // Turn signal high
+    delay(2);                   // 2 ms HIGH
+    digitalWrite(buzzer, LOW);  // Turn signal low
+    delay(2);                   // 2 ms LOW
+  }
+
+  // Pause between loops
+  delay(1000);  // 1 second pause
+}
+
+// Expected behavior:
+// - Buzzer will make two different tones in each loop
+// - First loop produces a higher-frequency (shorter delay) sound
+// - Second loop produces a lower-frequency (longer delay) sound
+
+```
+---
+# Sensor : KY-016 RGB 5mm LED Module
 
 ### Basic Information
 - Sensor name: KY-016 RGB 5mm LED Module
@@ -187,7 +660,7 @@ void loop() {
 ---
 
 
-# Sensor 3: KY-017 Tilt Switch Module
+# Sensor : KY-017 Tilt Switch Module
 
 ### Basic Information
 - Sensor name: KY-017 Tilt Switch Module
@@ -268,7 +741,7 @@ void loop() {
 ---
 
 
-# Sensor 4: KY-018 Photoresistor Module
+# Sensor : KY-018 Photoresistor Module
 
 ### Basic Information
 - Sensor name: KY-018 Photoresistor Module
@@ -325,7 +798,7 @@ void loop() {
 ---
 
 
-# Sensor 5: KY-020 Tilt Switch Module
+# Sensor : KY-020 Tilt Switch Module
 
 ### Basic Information
 - Sensor name: KY-020 Tilt Switch Module
@@ -407,7 +880,7 @@ void loop () {
 ---
 
 
-# Sensor 6: KY-022 Infrared Receiver Module
+# Sensor : KY-022 Infrared Receiver Module
 
 ### Basic Information
 - Sensor name: KY-022 Infrared Receiver Module
@@ -486,7 +959,7 @@ void loop() {
 
 
 
-# Sensor 7: KY-028 Temperature Sensor Module
+# Sensor : KY-028 Temperature Sensor Module
 
 ### Basic Information
 - Sensor name: KY-028 Temperature Sensor Module (Thermistor)

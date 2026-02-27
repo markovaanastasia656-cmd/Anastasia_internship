@@ -30,7 +30,6 @@ Multiple microcontrollers can be recorded here (Arduino, Raspberry Pi, etc
 - VCC → 5V
 - GND → GND
 - Signal → Digital Pin 4
-- *Note: A pull-up resistor (~4.7 kΩ) between Signal and VCC is required for reliable 1-Wire communication*]
 
   <img width="252" height="238" alt="image" src="https://github.com/user-attachments/assets/9d8d80b6-f391-4890-b764-e31fa7b176f0" />
 

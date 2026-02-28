@@ -17,3 +17,12 @@
 - Completed KY-017 and KY-020 via Joy-IT R3 DIP
 - Started on KY-016 and KY-022
 - 100 & 180 ohm resistors, and Infrared LED are still needed
+
+## Day 5: 27/02 
+- Completed Sensors KY-001, KY-002, KY-003, KY-005, KY-006 with Arduino Uno (Joy-IT R3 DIP) 
+- Conducted simple experiment using Sensor 5 and KY-022 together 
+
+## Day 6: 28/02 
+- Completed Sensors KY-010, KY-011,　KY-012, KY-013 with Arduino Uno (Joy-IT R3 DIP) 
+- Continued sensor integration practice 
+- Improved understanding of digital and analog signal behavior

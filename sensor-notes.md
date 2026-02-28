@@ -901,6 +901,9 @@ void loop() {
 - Green LED → Digital Pin 11 (through 100ohm resistor)
 - Blue LED → Digital Pin 12 (through 100ohm resistor)
 
+  <img width="233" height="262" alt="image" src="https://github.com/user-attachments/assets/ba4a9783-5b23-4fcc-9996-7f0fe7962acb" />
+
+
 ---
 
 ### Software Setup (Arduino IDE)
@@ -1000,6 +1003,9 @@ void loop() {
 - GND → GND
 - Signal → Pin 10
 
+<img width="232" height="229" alt="image" src="https://github.com/user-attachments/assets/f6e95624-0491-4732-a79f-da234d09e503" />
+
+
 ---
 
 ### Software Setup (Arduino IDE)
@@ -1081,6 +1087,9 @@ void loop() {
 - GND → GND
 - Signal  → A5
 
+  <img width="241" height="241" alt="image" src="https://github.com/user-attachments/assets/27d48f6d-b507-44e3-8f58-1e27f0745fce" />
+
+
 #### Arduino Sketch
 
 ```cpp
@@ -1135,6 +1144,9 @@ void loop() {
 - VCC → 5V
 - GND → GND
 - Signal → Pin 10
+
+  <img width="254" height="267" alt="image" src="https://github.com/user-attachments/assets/1add0168-4d0d-4f4e-80ce-d931fd9cfb8c" />
+
 
 ---
 
@@ -1216,6 +1228,9 @@ void loop () {
 - VCC → 5V
 - GND → GND
 - Signal → Pin 2
+
+  <img width="215" height="219" alt="image" src="https://github.com/user-attachments/assets/dfdfef96-911d-46d8-85e3-4c166c60367d" />
+
 
 ---
 
@@ -1308,6 +1323,8 @@ void loop() {
 - GND → GND
 - Pin 3 → Digital Signal 
 - Pin A0 → Analog Signal (temperature value)
+
+<img width="217" height="220" alt="image" src="https://github.com/user-attachments/assets/f337d16f-7022-45fc-969f-b2c1e544fc68" />
 
 
 #### Arduino Sketch

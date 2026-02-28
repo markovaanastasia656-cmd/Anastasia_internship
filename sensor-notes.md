@@ -106,7 +106,7 @@ void loop() {
 - It consists of an outer conductive casing and an internal spring
 - When a shock or vibration occurs, the spring makes contact with the casing
 - This closes an internal switch and generates a **digital signal** change
-- Useful for security systems (door/window vibration), machine vibration monitoring, and shock detection projects:contentReference[oaicite:1]{index=1}
+- Useful for security systems (door/window vibration), machine vibration monitoring, and shock detection projects
 
 ---
 
@@ -170,7 +170,7 @@ void loop() {
 ```
 ---
 
-# Sensor 6: KY-003 Hall Magnetic Field Sensor
+# Sensor 3: KY-003 Hall Magnetic Field Sensor
 
 ### Basic Information
 - Sensor name: KY-003 Hall Magnetic Field Sensor
@@ -558,6 +558,317 @@ void loop() {
 
 ```
 ---
+
+# Sensor : KY-010 Light Barrier (Photoelectric Sensor)
+
+### Basic Information
+- Sensor name: KY-010 Light Barrier (Photoelectric Sensor)
+- Purpose: Detect interruption of a light beam (presence/movement)
+- Interface: Digital output
+- Operating voltage: 3.3 V – 5 V
+- Source / Reference: [https://sensorkit.joy-it.net/en/sensors/ky-010]
+
+---
+
+### How it works
+- The KY-010 module contains a **light barrier (photoelectric sensor)**  
+- It emits a signal when the light path is **not interrupted**  
+- If something **blocks the light beam**, the signal is **interrupted**  
+- This makes the module useful for detecting **passage, movement, or object interruption**
+
+---
+
+### Hardware Setup 
+
+#### PIN Connection - Arduino Uno (Joy-IT R3 DIP)
+- VCC → 5V
+- GND → GND
+- Signal → Pin 10
+
+  <img width="303" height="278" alt="image" src="https://github.com/user-attachments/assets/7f202f1b-ef45-40bc-bceb-d881097552e1" />
+
+
+---
+
+### Software Setup (Arduino IDE)
+- Platform: Arduino Uno
+- Programming language: C / Arduino
+- Library: None required (uses built-in digitalRead())
+
+#### Arduino Sketch
+
+```cpp
+
+int barrier = 10; // KY-010 signal pin connected to Arduino pin 10
+int value;        // Variable to store sensor reading
+
+void setup() {
+  // Set the sensor pin as input with pull-up resistor for stability
+  pinMode(barrier, INPUT_PULLUP);
+
+  // Start serial communication with computer
+  Serial.begin(9600);
+
+  // Print a startup message
+  Serial.println("KY-010 Light Barrier Test Started");
+}
+
+void loop() {
+  // Read digital state from light barrier
+  value = digitalRead(barrier);
+
+  // HIGH = light path clear, LOW = beam blocked
+  if (value == HIGH) {
+    Serial.println("Light path clear");  // Output when no object blocks the beam
+  } else {
+    Serial.println("Light blocked");     // Output when object blocks the beam
+  }
+
+  // Wait 300 milliseconds before next reading
+  delay(300);
+}
+
+// Expected behavior:
+// - No object in the beam → HIGH → "Light path clear" printed
+// - Object interrupts beam → LOW → "Light blocked" printed
+```
+---
+
+# Sensor : KY-011 2-Color 5mm LED Module
+
+### Basic Information
+- Sensor name: KY-011 2-Color 5mm LED Module
+- Purpose: Visual indicator using red and green LED colors
+- Interface: Digital output (LED control)
+- Operating voltage: 2.0 V – 2.5 V forward voltage per LED
+- Source / Reference: [https://sensorkit.joy-it.net/en/sensors/ky-011]
+
+---
+
+### How it works
+- The KY-011 module contains two individual LEDs (red and green) in a single package with a **common cathode** configuration.
+- A common cathode means both LEDs share the **same negative (GND) connection**.
+- Each LED has its own positive input pin:
+  - When the red LED input receives a HIGH signal → **red light turns on**
+  - When the green LED input receives a HIGH signal → **green light turns on**
+- With simple ON/OFF control or PWM, you can show different visual states or mix brightness to indicate statuses.
+- Used for visual feedback in projects (status indicators, alerts, simple color signals).
+
+---
+
+### Hardware Setup 
+
+#### PIN Connection - Arduino Uno (Joy-IT R3 DIP)
+- VCC → (not directly to module; see note below)
+- GND → GND
+- Pin 9 → Green LED input
+- Pin 10 → Red LED input
+
+  <img width="215" height="277" alt="image" src="https://github.com/user-attachments/assets/868c7165-c2af-40b2-a2ee-c3cfafa1f48a" />
+
+
+> **Important note:** LEDs require a **series resistor** to limit current and avoid damage.
+> - Use ~220 Ω resistors for 5 V supply.
+
+---
+
+### Software Setup (Arduino IDE)
+- Platform: Arduino Uno
+- Programming language: C / Arduino
+- Library: None required (uses built-in digitalWrite() or analogWrite())
+
+#### Arduino Sketch (ON/OFF example)
+
+```cpp
+
+// Declare LED control pins
+int ledRed = 10;    // KY-011 red LED input
+int ledGreen = 9;   // KY-011 green LED input
+
+void setup() {
+  // Set both LED pins as OUTPUT
+  pinMode(ledRed, OUTPUT); 
+  pinMode(ledGreen, OUTPUT); 
+}
+
+void loop() {
+  // Turn on red LED, turn off green
+  digitalWrite(ledRed, HIGH);   // Red LED ON
+  digitalWrite(ledGreen, LOW);  // Green LED OFF
+  delay(3000);                  // Wait for 3 seconds
+
+  // Turn off red, turn on green
+  digitalWrite(ledRed, LOW);    // Red LED OFF
+  digitalWrite(ledGreen, HIGH); // Green LED ON
+  delay(3000);                  // Wait for another 3 seconds
+}
+
+// Expected behavior:
+// - Red LED lights for 3 seconds
+// - Green LED lights for 3 seconds
+// - Cycle repeats
+```
+---
+
+# Sensor : KY-012 Active Piezo-Buzzer Module
+
+### Basic Information
+- Sensor name: KY-012 Active Piezo‑Buzzer Module
+- Purpose: Generate an audible sound when activated
+- Interface: Digital output (driven by voltage)
+- Operating voltage: 3.3 V – 5 V
+- Source / Reference: [https://sensorkit.joy-it.net/en/sensors/ky-012]
+### How it works
+- The KY‑012 module contains an active buzzer element  
+- An **active buzzer** produces its own square‑wave signal internally and does **not** require an external PWM or tone generation signal  
+- When the signal pin receives a voltage ≥ 3.3 V, the buzzer begins producing sound at around 2.5 kHz  
+- It draws up to ~30 mA and produces a loud sound (~85 dB), suitable for alarms or audible feedback
+
+---
+
+### Hardware Setup 
+
+### Software Setup (Arduino IDE)
+- Platform: Arduino Uno
+- Programming language: C / Arduino
+- Library: None required (uses built‑in digitalWrite())
+
+#### PIN Connection - Arduino Uno (Joy‑IT R3 DIP)
+- Signal → Pin 13
+- +V → 5V
+- GND → GND
+
+<img width="282" height="271" alt="image" src="https://github.com/user-attachments/assets/01b9d2bf-fafa-4a3c-9d60-9bf8a0c1b995" />
+
+
+#### Arduino Sketch
+
+```cpp
+
+// Declare the digital pin connected to the buzzer
+int buzzer = 13; // Connects KY-012 signal to Arduino pin 13
+
+void setup() {
+  // Set the buzzer pin as an output
+  pinMode(buzzer, OUTPUT);
+}
+
+void loop() {
+  // Turn the buzzer on (voltage applied)
+  digitalWrite(buzzer, HIGH); // Buzzer starts producing sound
+
+  // Wait for 4 seconds while the buzzer is sounding
+  delay(4000);
+
+  // Turn the buzzer off (no voltage)
+  digitalWrite(buzzer, LOW); // Buzzer stops sound
+
+  // Wait for 2 seconds before repeating
+  delay(2000);
+}
+
+// Expected behavior:
+// - The buzzer will emit a tone (~2.5 kHz) when the pin is HIGH
+// - When the pin is LOW, the buzzer is silent
+// - Useful for alarms, notifications, and audible feedback
+```
+---
+
+# Sensor : KY-013 Temperature Sensor (NTC)
+
+### Basic Information
+- Sensor name: KY-013 Temperature Sensor (NTC Thermistor)
+- Purpose: Measure ambient temperature by reading change in resistance
+- Interface: Analog output (voltage varies with temperature)
+- Operating voltage: 3.3 V – 5 V
+- Measuring range: –55 °C to +125 °C
+- Measurement accuracy: ±0.5 °C
+- Known resistance: 10 kΩ
+- Specific thermistor constant: 3950 Ω
+- Source / Reference: [https://sensorkit.joy-it.net/en/sensors/ky-013]
+---
+
+### How it works
+- The KY-013 module contains an **NTC thermistor** (Negative Temperature Coefficient)
+- An NTC thermistor has a resistance that **decreases as temperature increases**
+- The sensor is used in a **voltage divider circuit**
+  - A fixed resistor is paired with the thermistor
+  - Measuring the divided voltage lets you estimate resistance
+- Resistance can then be mathematically converted to temperature readings
+- This module is suitable for precise temperature measurement tasks like monitoring systems and climate controls
+
+---
+
+### Hardware Setup 
+
+#### PIN Connection - Arduino Uno (Joy-IT R3 DIP)
+- VCC → 5V
+- GND → GND
+- Signal → A1 (analog input)
+
+<img width="270" height="268" alt="image" src="https://github.com/user-attachments/assets/4f4f5502-34ad-493d-ac73-e222652d7350" />
+
+  
+---
+
+### Software Setup (Arduino IDE)
+- Platform: Arduino Uno
+- Programming language: C / Arduino
+- Library: None required (uses built-in analogRead())
+
+#### Arduino Sketch
+
+```cpp
+
+// Declare the analog pin connected to the KY-013 signal
+int ntcPin = A1; // KY-013 analog output connected to Arduino analog pin A1
+
+// Variables to store readings
+double rawValue;    // raw analog reading (0–1023)
+double voltage;     // voltage calculated from raw value
+double temperature; // calculated temperature in °C
+
+void setup() {
+  // Initialize sensor pin as input
+  pinMode(ntcPin, INPUT);
+
+  // Start serial communication at 9600 baud
+  Serial.begin(9600);
+
+  // Print an initial message once at startup
+  Serial.println("KY-013 NTC Temperature Test");
+}
+
+void loop() {
+  // Read raw analog value from the sensor
+  rawValue = analogRead(ntcPin);
+
+  // Convert raw value to voltage (0–5V)
+  voltage = rawValue * 5.0 / 1023.0;
+
+  // Convert measured voltage to resistance (assuming a 10k fixed resistor)
+  double resistance = ((voltage / (5.0 - voltage)) * 10000.0);
+
+  // Convert resistance to temperature using thermistor math
+  // Based on Steinhart–Hart approximation with Beta coefficient
+  temperature = 1.0 / ((1.0 / 298.15) + (1.0 / 3950.0) * log(resistance / 10000.0));
+  temperature = temperature - 273.15; // Convert Kelvin to °C
+
+  // Print the measured temperature
+  Serial.print("Temperature: ");
+  Serial.print(temperature);
+  Serial.println(" °C");
+
+  // Wait 1 second before the next measurement
+  delay(1000);
+}
+
+// Expected behavior:
+// - As actual ambient temperature rises → measured temperature value increases
+// - As temperature falls → measured value decreases
+```
+---
+
 # Sensor : KY-016 RGB 5mm LED Module
 
 ### Basic Information
